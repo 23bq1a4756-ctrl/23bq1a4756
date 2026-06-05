@@ -29,16 +29,15 @@ public class NotificationService {
         List<Notification> list = new ArrayList<>();
 
         json = json.trim();
-
-        // remove [ ]
         json = json.substring(1, json.length() - 1);
 
-        // split objects
         String[] objects = json.split("\\},\\{");
 
         for (String obj : objects) {
 
-            obj = obj.replace("{", "").replace("}", "").replace("\"", "");
+            obj = obj.replace("{", "")
+                    .replace("}", "")
+                    .replace("\"", "");
 
             String[] fields = obj.split(",");
 
@@ -48,8 +47,8 @@ public class NotificationService {
             String timestamp = "";
 
             for (String f : fields) {
-                String[] kv = f.split(":");
 
+                String[] kv = f.split(":");
                 if (kv.length < 2) continue;
 
                 String key = kv[0].trim();
@@ -89,16 +88,26 @@ public class NotificationService {
 
     public static void main(String[] args) throws Exception {
 
-        String url = "https://4.224.186.213/evaluation-service/notifications";
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter URL: ");
+        String url = sc.nextLine();
+
+        System.out.print("Enter N (top N notifications): ");
+        int n = sc.nextInt();
 
         String json = fetch(url);
 
         List<Notification> list = parse(json);
 
-        List<Notification> result = topN(list, 5);
+        List<Notification> result = topN(list, n);
+
+        System.out.println("\nTop " + n + " Notifications:\n");
 
         for (Notification s : result) {
             System.out.println(s);
         }
+
+        sc.close();
     }
 }
