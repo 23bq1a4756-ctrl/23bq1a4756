@@ -1,20 +1,30 @@
-package  Stage1;
-import java.net.http.*;
+package Stage1;
+
 import java.net.URI;
-import java.util.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 public class NotificationService {
+    private static final String URL =
+            "https://4.224.186.213/evalution-service/notifications";
+
     private static final Map<String, Integer> PRIORITY = Map.of(
             "Placement", 2,
             "Result", 1,
             "Event", 0
     );
 
-    public static String fetch(String url) throws Exception {
+    public static String fetch() throws Exception {
+
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(URL))
                 .GET()
                 .build();
 
@@ -90,13 +100,10 @@ public class NotificationService {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter URL: ");
-        String url = sc.nextLine();
-
         System.out.print("Enter N (top N notifications): ");
         int n = sc.nextInt();
 
-        String json = fetch(url);
+        String json = fetch();
 
         List<Notification> list = parse(json);
 
